@@ -246,28 +246,30 @@ select {
 }
 
 /* time spent at work coloring */
-li.t1 { background-color: #33FF00; }
-li.t2 { background-color: #66FF00; }
-li.t3 { background-color: #99FF00; color: #3274D0; }
-li.t4 { background-color: #CCFF00; color: #3274D0; }
-li.t5 { background-color: #FFFF00; color: #3274D0; }
-li.t6 { background-color: #FFCC00; color: #3274D0; }
-li.t7 { background-color: #FF9900; color: #3274D0; }
-li.t8 { background-color: #FF6600; }
-li.t9 { background-color: #FF3300; }
-li.more { background-color: #FF0000; }
+.help li.t0 { background-color: #00FF00; }
+.help li.t1 { background-color: #3FFF00; }
+.help li.t2 { background-color: #7FFF00; color: #3274D0; }
+.help li.t3 { background-color: #BFFF00; color: #3274D0; }
+.help li.t4 { background-color: #FFFF00; color: #3274D0; }
+.help li.t5 { background-color: #FFBF00; color: #3274D0; }
+.help li.t6 { background-color: #FF7F00; color: #3274D0; }
+.help li.t7 { background-color: #FF3F00; }
+.help li.t8 { background-color: #FF0000; }
+.help li.t9 { background-color: #FF003F; }
+.help li.t10 { background-color: #FF007F; }
+.help li.t11 { background-color: #FF00BF; }
+.help li.more { background-color: #FF00FF; }
 
 .help {
   position: absolute;
-  bottom: -25px;
-  left: -14px;
+  bottom: -27px;
   padding-bottom: 20px;
-  width: 452px;
+  width: 460px;
 }
 
 .help li {
   display: block;
-  width: 44px;
+  width: 35px;
 /*   height: 30px; */
   float: left;
   font-weight: bold;
@@ -276,7 +278,7 @@ li.more { background-color: #FF0000; }
   color: #FFFFFF;
   border-top: 2px solid #333333;
   border-bottom: 2px solid #333333;
-  border-left: 1px solid #333333;
+/*  border-left: 1px solid #333333;*/
 }
 
 .help li:first-child {
@@ -284,6 +286,7 @@ li.more { background-color: #FF0000; }
     -moz-border-radius-bottomleft: 20px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    border-left: 2px solid #333333;
 }
 
 .help li:last-child {
@@ -291,7 +294,7 @@ li.more { background-color: #FF0000; }
     -moz-border-radius-bottomright: 20px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-    border-right: 1px solid #333333;
+    border-right: 2px solid #333333;
 }
 
 #wrapper .timeentries {
