@@ -1,0 +1,416 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, Clean, sans-serif;
+  background-color: #E5ECF9;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
+a { 
+  color: #f9fd02;
+  text-decoration: none;
+}
+
+#wrapper {
+  position: relative;
+  width: 1124px;
+  margin: 10px auto;
+  padding: 10px 0 10px 0;
+  background-color: #3274D0;
+  border: 5px solid #C5D7EF;
+}
+
+.switch {
+position: absolute;
+left: 450px;
+}
+
+/* styles for login page */
+#loginwrapper {
+  width: 400px;
+  margin: 10px auto;
+  padding: 15px 0;
+  background-color: #3274D0;
+  border: 5px solid #C5D7EF;
+}
+
+#loginwrapper h2 {
+  background-color: #a3a3a3;
+  border-top: 3px dashed #FFFFFF;
+  border-bottom: 3px dashed #FFFFFF;
+  color: #FFFFFF;
+  font-size: 200%;
+  font-weight: bold;
+  line-height: 42px;
+  margin: 0;
+  text-align: center;
+}
+
+#statusline {
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  background: #1143b0; 
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+  padding: 5px;
+}
+
+#statusline.statusloading {
+  background: #1143b0 url(/static/loading.gif) no-repeat scroll 90% 50%;
+}
+
+#statusline.statusdone {
+  background-color: white;
+  color: #1143B0
+}
+
+#statusline.statuserror {
+  background-color: #ee3300;
+}
+
+#loginform {
+  width: 250px;
+  margin: 0 auto;
+}
+
+#loginform p {
+  margin: 2px 0;
+  font-size: 16px;
+}
+
+#loginform label {
+  font-size: 100%;
+  font-weight: bold;
+}
+
+#loginform input { 
+  margin-bottom: 5px; 
+}
+
+#loginform input[type="text"], #loginform input[type="password"] {
+  color: #BB0011;
+  font-family: Verdana;
+  font-weight: bold;
+  padding: 3px;
+  width: 220px;
+}
+
+/* end of styles for login page */
+
+
+.clear {
+  clear: both;
+}
+
+h1 {
+  font-size: 250%;
+  font-weight: bold;
+  color: #FFFFFF;
+  padding: 0 0 0 50px;
+  background-color: #a3a3a3;
+  margin: 5px 0 20px 0;
+  border-top: 3px dashed #FFFFFF;
+  border-bottom: 3px dashed #FFFFFF;
+}
+
+h2 {
+  color: #FFFFFF;
+  margin: 0 0 10px 50px;
+}
+
+p {
+  margin: 0 0 0 50px;
+  color: #ffffff;
+  font-size: 120%;
+}
+
+#total {
+  position: absolute;
+  top: 72px;
+  right: 20px;
+  color: #3274D0;
+  background-color: #FFFFFF;
+  font-size: 150%;
+  border: 2px solid #FFFFFF;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+
+#total span {
+  font-weight: bold;
+  font-size: 125%;
+  vertical-align: middle;
+}
+
+#filter {
+  margin: 10px 50px 20px;
+  padding: 10px 0;
+  text-align: center;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #2060a5;
+}
+
+.calendarwrap {
+  float: left;
+  position: relative;
+  margin-left: 50px;
+}
+
+#wrapper .calendar {
+  margin: 0 auto 25px;
+}
+
+#wrapper ul.week {
+  margin-bottom: 10px;
+  height: 50px;
+}
+
+ul.days {
+  margin-bottom: 10px;
+  height: 30px;
+}
+
+/* calendar heading */
+.days li {
+  display: block;
+  width: 52px;
+  height: 30px;
+  float: left;
+  margin-right: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 150%;
+  line-height: 30px;
+  text-align: center;
+  color: #FFFFFF;
+  background-color: #A2A2A2;
+}
+
+.week li {
+  display: block;
+  width: 50px;
+  height: 50px;
+  float: left;
+  margin-right: 10px;
+  -moz-border-radius: 25x;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 150%;
+  line-height: 50px;
+  text-align: center;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+}
+
+/*li span {
+    position: relative;
+    z-index: 2;
+}
+
+svg {
+    position: relative;
+    top: -100%;
+}*/
+
+select {
+  border: medium none;
+}
+
+.week li:hover, li.selected {
+  background-color: #FFFFFF !important;
+  color: #3274D0;
+  cursor: pointer;
+}
+
+/* time spent at work coloring */
+li.t1 { background-color: #33FF00; }
+li.t2 { background-color: #66FF00; }
+li.t3 { background-color: #99FF00; color: #3274D0; }
+li.t4 { background-color: #CCFF00; color: #3274D0; }
+li.t5 { background-color: #FFFF00; color: #3274D0; }
+li.t6 { background-color: #FFCC00; color: #3274D0; }
+li.t7 { background-color: #FF9900; color: #3274D0; }
+li.t8 { background-color: #FF6600; }
+li.t9 { background-color: #FF3300; }
+li.more { background-color: #FF0000; }
+
+.help {
+  position: absolute;
+  bottom: -25px;
+  left: -14px;
+  padding-bottom: 20px;
+  width: 452px;
+}
+
+.help li {
+  display: block;
+  width: 44px;
+/*   height: 30px; */
+  float: left;
+  font-weight: bold;
+/*   line-height: 80px; */
+  text-align: center;
+  color: #FFFFFF;
+  border-top: 2px solid #333333;
+  border-bottom: 2px solid #333333;
+  border-left: 1px solid #333333;
+}
+
+.help li:first-child {
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.help li:last-child {
+    -moz-border-radius-topright: 20px;
+    -moz-border-radius-bottomright: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-right: 1px solid #333333;
+}
+
+#wrapper .timeentries {
+  float: left;
+  color: #FFFFFF;
+  font-weight: bold;
+  width: 540px;
+  margin: 0 50px;
+}
+
+table.dayentries {
+  border-collapse:collapse;
+  color: #FFFFFF;
+  font-weight: bold;
+  width: 100%;
+}
+
+label {
+  color: #ffffff;
+  font-size: 120%;
+}
+
+td {
+  border-bottom: 2px solid #FFFFFF;
+}
+
+td.time {
+  background-color:#FFFFFF;
+  color: #3274D0;
+  padding: 0.2em 0.5em;
+  border: none;
+  border-top: 2px solid #3274D0;
+  vertical-align: bottom;
+  width: 2em;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+tr.all td {
+  border: none;
+  color: #FFFFFF;
+  background-color: #3274D0;
+}
+
+tr.all td:last-child {
+  border-top: 2px solid white;
+}
+
+td.heading {
+  text-align: center;
+  line-height: 2em;
+  border: none;
+}
+
+td.heading .projectname {
+  color: #f9fd02;
+  font-weight: bold;
+  font-size: 140%;
+  text-decoration: underline;
+}
+
+#error_msg {
+  color: #ff6666;
+  font-size: 140%;
+  font-weight: bold;
+}
+
+#user {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  background-color: #777777;
+  color: #ffffff;
+  padding: 0.5em;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  font-style: italic;
+}
+
+#user span {
+  font-weight: bold;
+  font-style: normal;
+}
+
+#user a {
+  display: block;
+  float: right;
+  margin-left: 0.5em;
+  padding: 0 0.5em;
+  height: 100%;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-style: normal;
+  background-color: #454545;
+  color: #FFFFFF;
+}
+
+
+#footer {
+    width: 600px;
+    margin: 15px auto 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+#footer p {
+    margin: 0.5em 0 0;
+    color: #666666;
+    font-size: 12px;
+}
+
+#footer a {
+    color: #333333;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}

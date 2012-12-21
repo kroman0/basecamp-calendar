@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+  {# fill-in the head #}
+  {% block head %}
+    <script type="text/javascript">
+
+    function setMonthFilter() {
+        document.getElementById('month_filter').options['month_{{ report.month_filter }}'].selected = true;
+    }
+
+    // ID of the last pressed day-button
+    var lastClickedId;
+    var lastClickedClass;
+
+    function displayTimeEntries(elem) {
+        var id = elem.firstChild.nodeValue;
+        if (lastClickedId) {
+        
+            var lastClicked = document.getElementById(lastClickedId)
+            var lastBlockId = lastClicked.firstChild.nodeValue
+            var lastBlock = document.getElementById(lastBlockId)
+            lastBlock.style.display = 'none';
+            lastClicked.className = lastClickedClass;
+        }
+        var entries = document.getElementById(id);
+        if (entries) {
+            lastClickedId = elem.id;
+            entries.style.display = 'block';
+            lastClickedClass = elem.className; 
+            elem.className = 'selected';
+        }
+    }
+
+    function refreshCalendar() {
+        document.forms[0].submit();
+    }
+    
+//     jQuery(function ($) {
+// 	$(".logger").hide();
+// 	$(".switch span.cal").click(function () {
+// 		$(".logger").hide();
+// 		$(".calendar").show();
+// 	});
+//         $(".switch span.log").click(function () {
+//                 $(".calendar").hide();
+//                 $(".logger").show();
+//         });
+//     });
+    
+    window.onload = setMonthFilter;
+    </script>
+  {% endblock %}
+
+
+  {# fill-in the content #}
+  {% block content %}
+    <div id="wrapper">
+<!--      <div class="switch"><span class="cal">Календарик</span>|<span class="log">Логгер</span></div>-->
+      <h1><span class="calendar">Календарик</span><!--<span class="logger">Логгер</span>--></h1>
+      <div id="user">
+        {% if report.stayloggedin %}
+        Ти увійшов як: 
+        <span>{{ report.username }}</span> 
+        <a href="/logout" id="logout_btn">Вийти</a>
+        {% else %}
+        Вітання,
+        <span>{{ report.username }}</span> 
+        {% endif %}
+      </div>
+      <h2>Сьогодні {{ report.dt|date:"l" }}, {{ report.dt|date:"j" }} {{ report.dt|date:"F" }} {{ report.dt|date:"Y" }} року</h2>
+<!--       <p>Подивись скільки часу ти працював цього місяця і подумай над цим :)</p> -->
+<!--       <form id="times" class="logger" action="" ></form> -->
+      <form id="filter" class="calendar" action="/" method="POST">
+        Рік:
+        <select name="yf" onchange="refreshCalendar();">
+          {% for year in report.years %}
+          <option {% ifequal year report.year_filter %} selected {% endifequal %}
+            id="year{{ year }}" value="{{ year }}">{{ year }}</option> 
+          {% endfor %}
+        </select>
+        Місяць:
+        <select id="month_filter" name="mf" onchange="refreshCalendar();">
+          <option id="month_1" value="1">Січень</option>
+          <option id="month_2" value="2">Лютий</option>
+          <option id="month_3" value="3">Березень</option>
+          <option id="month_4" value="4">Квітень</option>
+          <option id="month_5" value="5">Травень</option>
+          <option id="month_6" value="6">Червень</option>
+          <option id="month_7" value="7">Липень</option>
+          <option id="month_8" value="8">Серпень</option>
+          <option id="month_9" value="9">Вересень</option>
+          <option id="month_10" value="10">Жовтень</option>
+          <option id="month_11" value="11">Листопад</option>
+          <option id="month_12" value="12">Грудень</option>
+        </select>
+        Проект: 
+        <select name="pf" onchange="refreshCalendar();"> 
+          {% for project in report.projects %}
+          <option {% ifequal project.0 report.project_filter %} selected {% endifequal %}   
+            id="project_{{ project.0 }}" value="{{ project.0 }}">{{ project.1 }}</option>
+          {% endfor %}
+        </select>
+      </form>
+      <div id="total">Загалом: <span>{{ report.total_hours|floatformat:2 }}</span> год.</div>
+      <div class="calendarwrap">
+        <div class="calendar">
+          <ul class="days">
+            <li>Пн</li>
+            <li>Вт</li>
+            <li>Ср</li>
+            <li>Чт</li>
+            <li>Пт</li>
+            <li>Сб</li>
+            <li>Нд</li>
+          </ul>
+          {% for week in report.weeks %}
+          <ul class="week">
+            {% for day in week %}
+            {% if day %}
+            <li onclick="displayTimeEntries(this);" id="calday{{ day.day }}" class="{{ day.style }}" style="{{ day.clock }}">{{ day.day }}</li>
+<!--                <span>{{ day.day }}</span>
+                <svg height="50" width="50" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><path fill="{{ day.color }}" d="M 25 25 L 25.00 0.00 A 25 25 1.57 0 1 {{ day.sector }} Z"/></g></svg>-->
+            {% else %}
+            <li class="{{ day.style }}"></li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+          {% endfor %}
+        </div>
+<!--        <ul class="help">
+          <li class="t1">1</li>
+          <li class="t2">2</li>
+          <li class="t3">3</li>
+          <li class="t4">4</li>
+          <li class="t5">5</li>
+          <li class="t6">6</li>
+          <li class="t7">7</li>
+          <li class="t8">8</li>
+          <li class="t9">9</li>
+          <li class="more">&gt;9</li>
+        </ul>-->
+      </div>
+      <div class="timeentries">
+        {% for day in report.entries %}
+        <div id="{{ day.day }}" style="display: none;">
+          {% regroup day.time_entries by projectref as grouped %}
+          <table class="dayentries">
+            {% for project_entries in grouped %}
+            <tr>
+              <td colspan="2" class="heading">
+                <a class="projectname" target="_blank" 
+                    href="{{ report.root }}/projects/{{ project_entries.grouper.0  }}">
+                  {{ project_entries.grouper.1 }}:
+                </a>
+              </td>
+            </tr>
+            {% for entry in project_entries.list %}
+            <tr>
+              <td>{{ entry.description }}</td>
+              <td class="time">{{ entry.hours|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            <tr class="all">
+              <td>&nbsp;</td>
+              <td class="time">{{ day.formatted_time }}</td>
+            </tr>
+          </table>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="clear"></div>
+    </div>
+  {% endblock %}

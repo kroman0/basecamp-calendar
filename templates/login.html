@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+  {# fill-in the head #}
+  {% block head %}
+    <script type="text/javascript" >
+    $(document).ready(function (e) {
+      $('input[name="subdomain"]').focus();
+
+      $('#loginform').submit(function (e) {
+        var form = $(this);
+
+        // validate values of input fields
+        var fields = ['password', 'login', 'subdomain'];
+        var valid = true;
+        for (var i=0; i<fields.length; i++) {
+          if ($('input[name="'+fields[i]+'"]').val() === '') {
+            valid = false;
+            break;
+          }
+        };
+        var status_line = $('#statusline');
+        if (valid) {
+          status_line.text('Вхід в Basecamp...');
+          status_line.addClass('statusloading').removeClass('statuserror');;
+        } else {
+          status_line.text('Всі поля мають бути заповнені!');
+          status_line.addClass('statuserror');
+          return false;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/login',
+          data: form.serialize(),
+          success: function(data, textStatus) {
+            status_line.text('Ти увійшов!');
+            status_line.removeClass('statusloading').addClass('statusdone');
+            // go to the main page
+            var params = '';
+            var index = window.location.href.indexOf('?');
+            if (index > -1)
+                params = window.location.href.slice(index);
+            window.location = '/' + params;
+          },
+          error: function(req, textStatus) {
+            if (req.status === 401) {
+              status_line.text('Логін або пароль невірний!');
+              status_line.removeClass('statusloading').addClass('statuserror');
+            } else {
+              status_line.text('Нажаль сервер зараз не може відповісти на ваш запит.');
+              status_line.removeClass('statusloading').addClass('statuserror');
+            }
+          },
+        });
+        return false;
+      });
+    });
+    </script>
+  {% endblock %}
+
+  {# fill-in the content #}
+  {% block content %}
+    <div id="loginwrapper">
+      <h2>Календарик</h2>
+      <div id="statusline">
+        Дізнайся скільки часу ти працював цього місяця
+      </div>
+      <form id="loginform" action="/login" method="POST">
+        <p><label for="subdomain" class="small">Піддомен *.basecamphq.com</label></p>
+        <p><input id="subdomain" type="text" name="subdomain" value="" /></p>
+        <p><label for="login">Користувач Basecamp</label></p>
+        <p><input id="login" type="text" name="login" value="" /></p>
+        <p><label for="password">Пароль</label></p>
+        <p><input id="passowrd" type="password" name="password" value="" /></p>
+        <p>
+          <input id="saveuser" type="checkbox" name="saveuser" />
+          <label for="saveuser" style="font-weight: normal;">Запам'ятати мене</label>
+        </p>
+        <p style="text-align: center;"><input type="submit" name="login" value="Увійти" /></p>
+        {% for hidden_field in hidden.items %}
+        <input type="hidden" name="{{ hidden_field.0 }}" value="{{ hidden_field.1 }}" />
+        {% endfor %}
+      </form>
+    </div>
+  {% endblock %}

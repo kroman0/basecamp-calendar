@@ -1,0 +1,30 @@
+﻿{% extends "base.html" %} 
+
+  {# fill-in the head #}
+  {% block head %}
+    <script type="text/javascript">
+      var timerId;
+      function countDown(elem) {
+          if (elem.innerHTML < 2) {
+              clearInterval(timerId);
+              window.location='/login';
+          }
+          else
+              elem.innerHTML--; 
+      }
+      
+      window.onload = function() { 
+        timerId = setInterval('countDown(document.getElementById(\'count_text\'))', 1000);
+      }
+    </script>
+  {% endblock %}
+
+  {#  fill-in the content #}
+  {% block content %}
+    <div id="wrapper">
+      <h1>Календарик</h1>
+      <p>Ти успішно вийшов.</p>
+      <p>Не хочеш <a href="/login">увійти</a> знов через <span id="count_text">5</span> секунд(и)?</p>
+    </div>
+  {% endblock%}
+
