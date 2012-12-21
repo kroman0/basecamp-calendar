@@ -171,7 +171,7 @@ p {
 .calendarwrap {
   float: left;
   position: relative;
-  margin-left: 50px;
+  margin-left: 40px;
 }
 
 #wrapper .calendar {
@@ -191,7 +191,7 @@ ul.days {
 /* calendar heading */
 .days li {
   display: block;
-  width: 52px;
+  width: 56px;
   height: 30px;
   float: left;
   margin-right: 10px;
@@ -212,16 +212,16 @@ ul.days {
   height: 50px;
   float: left;
   margin-right: 10px;
-  -moz-border-radius: 25x;
-  -webkit-border-radius: 25px;
-  border-radius: 25px;
+  -moz-border-radius: 28px;
+  -webkit-border-radius: 28px;
+  border-radius: 28px;
   font-weight: bold;
   font-size: 150%;
   line-height: 50px;
   text-align: center;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
   color: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  border: 3px solid #FFFFFF;
 }
 
 /*li span {
@@ -236,6 +236,7 @@ svg {
 
 select {
   border: medium none;
+  margin-right: 20px;
 }
 
 .week li:hover, li.selected {
@@ -298,7 +299,7 @@ li.more { background-color: #FF0000; }
   color: #FFFFFF;
   font-weight: bold;
   width: 540px;
-  margin: 0 50px;
+  margin: 0 40px;
 }
 
 table.dayentries {

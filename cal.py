@@ -97,7 +97,7 @@ class Day(object):
             sd.append(sector(i, ss))
         sd.reverse()
         #return """background-color: %s; background-image: url("data:image/svg+xml;utf8,<svg height='50' width='50' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><g>%s</g></svg>");"""%(self.color,"".join(sd))
-        return """background-image: url("data:image/svg+xml;utf8,<svg height='50' width='50' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><g>%s</g></svg>");"""%("".join(sd))
+        return """border-color:%s;background-image: url("data:image/svg+xml;utf8,<svg height='50' width='50' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><g>%s</g></svg>");"""%(self.color,"".join(sd))
 
 
 class calRequestHandler(webapp.RequestHandler):
