@@ -17,6 +17,7 @@ def isRelativeURL(url):
         return True
     return False
 
+
 def absoluteURL(base, url):
     """Converts a URL to an absolute URL given a base
     """
@@ -133,4 +134,3 @@ class RESTClient(object):
 
     def reload(self):
         self.open(*self._requestData)
-
