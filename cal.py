@@ -21,6 +21,20 @@ _ = lambda x: os.path.join(os.path.dirname(__file__), 'templates', x)
 
 DOMAIN = 'basecamphq.com'
 
+def sector(color, time, size=25):
+    color = "rgb(%d,%d,%d)" % (
+        (color >> 16) & 255, (color >> 8) & 255, color & 255)
+    trad = math.radians(time / 12.0 * 360)
+    x, y = size + size * math.sin(trad), size - size * math.cos(trad)
+    if time > 6.0:
+        cc = "A %d %d 1.57 0 1 %d.0 %d.0" \
+            " A %d %d 1.57 0 1 %.1f %.1f" % (
+            size, size, size, 2*size, size, size, x, y)
+    else:
+        cc = "A %d %d 1.57 0 1 %.1f %.1f" % (size, size, x, y)
+    return "<path fill='%s' d='M %d %d L %d.00 0.00 %s Z'/>" % (
+        color, size, size, size, cc)
+
 
 class TimeEntry(object):
     def __init__(self, hours, description, projectref):
@@ -85,18 +99,6 @@ class Day(object):
         if not self.time:
             return ''
 
-        def sector(color, time):
-            color = "rgb(%d,%d,%d)" % (
-                (color >> 16) & 255, (color >> 8) & 255, color & 255)
-            trad = math.radians(time / 12.0 * 360)
-            x, y = 25 + 25 * math.sin(trad), 25 - 25 * math.cos(trad)
-            if time > 6.0:
-                cc = "A 25 25 1.57 0 1 25.0 50.0" \
-                    " A 25 25 1.57 0 1 %.1f %.1f" % (x, y)
-            else:
-                cc = "A 25 25 1.57 0 1 %.1f %.1f" % (x, y)
-            return "<path fill='%s' d='M 25 25 L 25.00 0.00 %s Z'/>" % (
-                color, cc)
         ss = 0.0
         sd = []
         for i, h in self.grouped:
@@ -306,8 +308,29 @@ class MainPage(calRequestHandler):
             'dt': now,
         })
 
+        projects = set(map(lambda x: x.projectref[0], report_raw[2]))
+        grouped = [(x, sum([y.hours
+                            for y in report_raw[2]
+                            if y.projectref[0] == x]
+                           )) for x in projects]
+
+        grouped = sorted(grouped)
+        tsum = sum(map(lambda x: x[1], grouped))
+        ss = 0.0
+        sd = []
+        for i, h in [(i[0], i[1]*12.0/tsum) for i in grouped]:
+            ss += h
+            sd.append(sector(i, ss, 250))
+        sd.reverse()
+        graph ="background-image: url(\"data:image/svg+xml;utf8," \
+            "<svg height='500' width='500' " \
+            "xmlns:xlink='http://www.w3.org/1999/xlink' " \
+            "xmlns='http://www.w3.org/2000/svg'>" \
+            "<g>%s</g></svg>\");" % ("".join(sd))
+
         values = {
             'report': report,
+            'graph': graph,
         }
         self.renderToResponse(_('index.html'), values)
 
@@ -338,6 +361,7 @@ class MainPage(calRequestHandler):
             year, month, max(calendar.monthcalendar(year, month)[-1]))
         report = {}
         projects_dict = None
+        all_entries = []
         url = self.absoluteUrl(subdomain, '/time_entries/report.xml', query={
             'from': from_,
             'to': to,
@@ -371,11 +395,12 @@ class MainPage(calRequestHandler):
                 except:
                     description = ''
                 entries = report.setdefault(day, [])
-                entries.append(
-                    TimeEntry(hours, description, (proj_id, proj_name)))
+                te = TimeEntry(hours, description, (proj_id, proj_name))
+                entries.append(te)
+                all_entries.append(te)
         else:
             raise Exception('Bad HTTP status')
-        return (report, projects_dict)
+        return (report, projects_dict, all_entries)
 
 
 class TestPage(calRequestHandler):
@@ -449,8 +474,29 @@ class TestPage(calRequestHandler):
             'dt': now,
         })
 
+        projects = set(map(lambda x: x.projectref[0], report_raw[2]))
+        grouped = [(x, sum([y.hours
+                            for y in report_raw[2]
+                            if y.projectref[0] == x]
+                           )) for x in projects]
+
+        grouped = sorted(grouped)
+        tsum = sum(map(lambda x: x[1], grouped))
+        ss = 0.0
+        sd = []
+        for i, h in [(i[0], i[1]*12.0/tsum) for i in grouped]:
+            ss += h
+            sd.append(sector(i, ss, 250))
+        sd.reverse()
+        graph ="background-image: url(\"data:image/svg+xml;utf8," \
+            "<svg height='500' width='500' " \
+            "xmlns:xlink='http://www.w3.org/1999/xlink' " \
+            "xmlns='http://www.w3.org/2000/svg'>" \
+            "<g>%s</g></svg>\");" % ("".join(sd))
+
         values = {
             'report': report,
+            'graph': graph,
         }
         self.renderToResponse(_('index.html'), values)
 
@@ -474,6 +520,7 @@ class TestPage(calRequestHandler):
         # month)[-1]))
         report = {}
         projects_dict = self.getAllProjects(subdomain)
+        all_entries = []
 
         for i in range(1, 31):
             day = i
@@ -485,9 +532,10 @@ class TestPage(calRequestHandler):
                 proj_name = projects_dict[proj_id]
                 description = "".join(random.sample(string.letters, 20))
                 hours = 2 * random.random()
-                entries.append(
-                    TimeEntry(hours, description, (proj_id, proj_name)))
-        return (report, projects_dict)
+                te = TimeEntry(hours, description, (proj_id, proj_name))
+                entries.append(te)
+                all_entries.append(te)
+        return (report, projects_dict, all_entries)
 
 application = webapp.WSGIApplication([
     ('/', MainPage),

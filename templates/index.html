@@ -143,7 +143,7 @@
           <li class="more">&nbsp;</li>
         </ul>
       </div>
-      <div class="timeentries">
+      <div class="timeentries" style="{{ graph }}">
         {% for day in report.entries %}
         <div id="{{ day.day }}" style="display: none;">
           {% regroup day.time_entries by projectref as grouped %}

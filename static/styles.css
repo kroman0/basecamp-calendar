@@ -302,7 +302,9 @@ select {
   color: #FFFFFF;
   font-weight: bold;
   width: 540px;
+  min-height: 540px;
   margin: 0 40px;
+  background-repeat: no-repeat;
 }
 
 table.dayentries {
@@ -335,7 +337,7 @@ td.time {
   border-top-right-radius: 10px;
 }
 
-tr.all td {
+tr.all td.time {
   border: none;
   color: #FFFFFF;
   background-color: #3274D0;
