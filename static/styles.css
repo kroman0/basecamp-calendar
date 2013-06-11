@@ -337,8 +337,11 @@ td.time {
   border-top-right-radius: 10px;
 }
 
-tr.all td.time {
+tr.all td {
   border: none;
+}
+
+tr.all td.time {
   color: #FFFFFF;
   background-color: #3274D0;
 }
