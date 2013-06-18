@@ -35,6 +35,14 @@ def sector(color, time, size=25):
     return "<path fill='%s' d='M %d %d L %d.00 0.00 %s Z'/>" % (
         color, size, size, size, cc)
 
+def sectortext(color, start, time, text, size=25):
+    color = "rgb(%d,%d,%d)" % (
+        255 - (color >> 16) & 255, 255 - (color >> 8) & 255, 255 - color & 255)
+    trad = math.radians((start + 0.5 * time) / 12.0 * 360)
+    x, y = size + 0.65 * size * math.sin(trad), size - 0.65 * size * math.cos(trad)
+    return "<text fill='%s' x='%.1f' y='%.1f'>%.1f</text>" % (
+        color, x, y, text)
+
 
 class TimeEntry(object):
     def __init__(self, hours, description, projectref):
@@ -101,7 +109,9 @@ class Day(object):
 
         ss = 0.0
         sd = []
+        tt = []
         for i, h in self.grouped:
+            tt.append(sectortext(i, ss, h, h))
             ss += h
             sd.append(sector(i, ss))
         sd.reverse()
@@ -318,15 +328,18 @@ class MainPage(calRequestHandler):
         tsum = sum(map(lambda x: x[1], grouped))
         ss = 0.0
         sd = []
-        for i, h in [(i[0], i[1]*12.0/tsum) for i in grouped]:
-            ss += h
+        tt = []
+        for i, h in grouped:
+            x = h * 12.0 / tsum
+            tt.append(sectortext(i, ss, x, h, 250))
+            ss += x
             sd.append(sector(i, ss, 250))
         sd.reverse()
         graph ="background-image: url(\"data:image/svg+xml;utf8," \
             "<svg height='500' width='500' " \
             "xmlns:xlink='http://www.w3.org/1999/xlink' " \
             "xmlns='http://www.w3.org/2000/svg'>" \
-            "<g>%s</g></svg>\");" % ("".join(sd))
+            "<g>%s</g><g>%s</g></svg>\");" % ("".join(sd), "".join(tt))
 
         values = {
             'report': report,
@@ -484,15 +497,18 @@ class TestPage(calRequestHandler):
         tsum = sum(map(lambda x: x[1], grouped))
         ss = 0.0
         sd = []
-        for i, h in [(i[0], i[1]*12.0/tsum) for i in grouped]:
-            ss += h
+        tt = []
+        for i, h in grouped:
+            x = h * 12.0 / tsum
+            tt.append(sectortext(i, ss, x, h, 250))
+            ss += x
             sd.append(sector(i, ss, 250))
         sd.reverse()
         graph ="background-image: url(\"data:image/svg+xml;utf8," \
             "<svg height='500' width='500' " \
             "xmlns:xlink='http://www.w3.org/1999/xlink' " \
             "xmlns='http://www.w3.org/2000/svg'>" \
-            "<g>%s</g></svg>\");" % ("".join(sd))
+            "<g>%s</g><g>%s</g></svg>\");" % ("".join(sd), "".join(tt))
 
         values = {
             'report': report,
