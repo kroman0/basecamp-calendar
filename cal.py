@@ -21,6 +21,7 @@ _ = lambda x: os.path.join(os.path.dirname(__file__), 'templates', x)
 
 DOMAIN = 'basecamphq.com'
 
+
 def sector(color, time, size=25):
     color = "rgb(%d,%d,%d)" % (
         (color >> 16) & 255, (color >> 8) & 255, color & 255)
@@ -29,22 +30,33 @@ def sector(color, time, size=25):
     if time > 6.0:
         cc = "A %d %d 1.57 0 1 %d.0 %d.0" \
             " A %d %d 1.57 0 1 %.1f %.1f" % (
-            size, size, size, 2*size, size, size, x, y)
+            size, size, size, 2 * size, size, size, x, y)
     else:
         cc = "A %d %d 1.57 0 1 %.1f %.1f" % (size, size, x, y)
     return "<path fill='%s' d='M %d %d L %d.00 0.00 %s Z'/>" % (
         color, size, size, size, cc)
 
-def sectortext(color, start, time, text, size=25):
+
+def sectortext(color, start, time, text, proj_name="", size=25):
     color = "rgb(%d,%d,%d)" % (
         255 - (color >> 16) & 255, 255 - (color >> 8) & 255, 255 - color & 255)
     trad = math.radians((start + 0.5 * time) / 12.0 * 360)
-    x, y = size + 0.65 * size * math.sin(trad), size - 0.65 * size * math.cos(trad)
-    return "<text fill='%s' x='%.1f' y='%.1f'>%.1f</text>" % (
-        color, x, y, text)
+    x, y = size + 0.5 * size * \
+        math.sin(trad), size - 0.5 * size * math.cos(trad)
+    px, py = size + 0.65 * size * \
+        math.sin(trad), size - 0.65 * size * math.cos(trad)
+    delta = len("%.1f" % text) * 4
+    pdelta = len("%s" % proj_name) * 4
+    if (py - y) < 14:
+        y = y - 7 if y < py else y + 7
+        py = py + 7 if y < py else py - 7
+    return "<text fill='%s' x='%.1f' y='%.1f'>%.1f</text>" \
+           "<text fill='%s' x='%.1f' y='%.1f'>%s</text>" % (
+               color, x - delta, y, text, color, px - pdelta, py, proj_name)
 
 
 class TimeEntry(object):
+
     def __init__(self, hours, description, projectref):
         self.hours = hours
         self.description = description
@@ -124,6 +136,7 @@ class Day(object):
 
 
 class calRequestHandler(webapp.RequestHandler):
+
     def __init__(self, *args, **kwargs):
         super(calRequestHandler, self).__init__(*args, **kwargs)
 
@@ -329,13 +342,14 @@ class MainPage(calRequestHandler):
         ss = 0.0
         sd = []
         tt = []
+        dict_project = dict(sorted_projects)
         for i, h in grouped:
             x = h * 12.0 / tsum
-            tt.append(sectortext(i, ss, x, h, 250))
+            tt.append(sectortext(i, ss, x, h, dict_project[i], 250))
             ss += x
             sd.append(sector(i, ss, 250))
         sd.reverse()
-        graph ="background-image: url(\"data:image/svg+xml;utf8," \
+        graph = "background-image: url(\"data:image/svg+xml;utf8," \
             "<svg height='500' width='500' " \
             "xmlns:xlink='http://www.w3.org/1999/xlink' " \
             "xmlns='http://www.w3.org/2000/svg'>" \
@@ -498,13 +512,14 @@ class TestPage(calRequestHandler):
         ss = 0.0
         sd = []
         tt = []
+        dict_project = dict(sorted_projects)
         for i, h in grouped:
             x = h * 12.0 / tsum
-            tt.append(sectortext(i, ss, x, h, 250))
+            tt.append(sectortext(i, ss, x, h, dict_project[i], 250))
             ss += x
             sd.append(sector(i, ss, 250))
         sd.reverse()
-        graph ="background-image: url(\"data:image/svg+xml;utf8," \
+        graph = "background-image: url(\"data:image/svg+xml;utf8," \
             "<svg height='500' width='500' " \
             "xmlns:xlink='http://www.w3.org/1999/xlink' " \
             "xmlns='http://www.w3.org/2000/svg'>" \
