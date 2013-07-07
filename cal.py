@@ -50,7 +50,7 @@ def sectortext(color, start, time, text, proj_name="", size=25):
     if (py - y) < 14:
         y = y - 7 if y < py else y + 7
         py = py + 7 if y < py else py - 7
-    return "<text fill='%s' x='%.1f' y='%.1f'>%.1f</text>" \
+    return "<text fill='%s' x='%.1f' y='%.1f'>%.2f</text>" \
            "<text fill='%s' x='%.1f' y='%.1f'>%s</text>" % (
                color, x - delta, y, text, color, px - pdelta, py, proj_name)
 
