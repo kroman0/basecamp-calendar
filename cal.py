@@ -293,7 +293,7 @@ class MainPage(calRequestHandler):
                 raise Exception()
         except:
             month = dt.month
-        dt = dt.replace(month=month, year=year)
+        dt = dt.replace(day=1, month=month, year=year)
         report_raw = self.getMonthTimeReport(
             subdomain, dt.year, dt.month, subjectId, project)
         month_info = []
