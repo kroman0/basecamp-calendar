@@ -62,7 +62,7 @@ class RESTClient(object):
     sslConnectionFactory = httplib.HTTPSConnection
 
     def __init__(self, url=None):
-        self.requestHeaders = {}
+        self.requestHeaders = {'User-Agent': 'basecamp-calendar (kroman0@quintagroup.com)'}
         self._reset()
         self._requestData = None
         self.url = ''
