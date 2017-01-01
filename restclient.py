@@ -1,13 +1,21 @@
 """Simple REST Client for using by Basecamp API wrapper
 
-
+mkdir lib
+pip install -t lib/ -r requirements.txt
 """
 
-import httplib
+import logging
+#import httplib
 import urllib
 import urlparse
 import base64
+from google.appengine.api import urlfetch
+import requests
+import requests_toolbelt.adapters.appengine
 
+# Use the App Engine Requests adapter. This makes sure that Requests uses
+# URLFetch.
+requests_toolbelt.adapters.appengine.monkeypatch()
 
 def isRelativeURL(url):
     """Determines whether the given URL is a relative path segment
@@ -58,8 +66,8 @@ def getFullPath(pieces, params):
 
 class RESTClient(object):
 
-    connectionFactory = httplib.HTTPConnection
-    sslConnectionFactory = httplib.HTTPSConnection
+    #connectionFactory = httplib.HTTPConnection
+    #sslConnectionFactory = httplib.HTTPConnection
 
     def __init__(self, url=None):
         self.requestHeaders = {'User-Agent': 'basecamp-calendar (kroman0@quintagroup.com)'}
@@ -82,6 +90,7 @@ class RESTClient(object):
     def open(self, url='', data=None, params=None, headers=None, method='GET'):
         # Create a correct absolute URL and set it.
         self.url = absoluteURL(self.url, url)
+        logging.info(self.url)
 
         # Create the full set of request headers
         requestHeaders = self.requestHeaders.copy()
@@ -96,24 +105,38 @@ class RESTClient(object):
 
         # Make a connection and retrieve the result
         pieces = urlparse.urlparse(self.url)
-        if pieces[0] == 'https':
-            connection = self.sslConnectionFactory(pieces[1])
-        else:
-            connection = self.connectionFactory(pieces[1])
+        #if pieces[0] == 'https':
+            #connection = self.sslConnectionFactory(pieces[1])
+        #else:
+            #connection = self.connectionFactory(pieces[1])
+        urlfetch.set_default_fetch_deadline(30)
         try:
-            connection.request(
-                method, getFullPath(pieces, params), data, requestHeaders)
-            response = connection.getresponse()
+            response = requests.request(method, url=self.url, data=data, headers=requestHeaders)
+            #response = urlfetch.fetch(url=self.url, method=getattr(urlfetch, method), headers=requestHeaders, deadline=30)
+            #connection.request(
+                #method, getFullPath(pieces, params), data, requestHeaders)
+            #response = connection.getresponse()
         except Exception, e:
-            connection.close()
-            self.status, self.reason = e.args
+            #logging.error(self.url, repr(e))
+            #connection.close()
+            #self.status, self.reason = e.args
             raise e
         else:
-            self.headers = response.getheaders()
-            self.contents = response.read()
-            self.status = response.status
+            #self.headers = response.getheaders()
+            #self.contents = response.read()
+            #self.status = response.status
+            #self.reason = response.reason
+            #connection.close()
+            '''
+            self.status = response.status_code
+            self.contents = response.content
+            self.headers = response.headers
+            self.reason = response.status_code
+            '''
+            self.status = response.status_code
+            self.contents = response.text
+            self.headers = response.headers
             self.reason = response.reason
-            connection.close()
 
     def get(self, url='', params=None, headers=None):
         self.open(url, None, params, headers)

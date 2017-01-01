@@ -24,3 +24,6 @@ handlers:
 libraries:
 - name: pycrypto
   version: "2.3"
+
+env_variables:
+  GAE_USE_SOCKETS_HTTPLIB: 'true'
